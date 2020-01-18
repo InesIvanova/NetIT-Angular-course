@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     path('', views.ProductListView.as_view()),
-    re_path('^products/(?P<product_id>\d+)/$', views.ProductEditDelete.as_view()),
+    re_path('^(?P<product_id>\d+)/$', views.ProductEditDelete.as_view()),
 ]
