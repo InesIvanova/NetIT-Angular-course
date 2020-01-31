@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import User, Post, Comment
@@ -52,3 +53,45 @@ class CommentListCreate(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserEditDelete(APIView):
+    def get_object(self, pk):
+        try:
+            product = User.objects.get(pk=pk)
+            return product
+        except User.DoesNotExist:
+            raise Http404
+
+    def get(self, request, product_id):
+        product = self.get_object(pk=product_id)
+        serializer = UserSerializer(product)
+        return Response(serializer.data)
+
+
+class PostEditDelete(APIView):
+    def get_object(self, pk):
+        try:
+            product = Post.objects.get(pk=pk)
+            return product
+        except Post.DoesNotExist:
+            raise Http404
+
+    def get(self, request, product_id):
+        product = self.get_object(pk=product_id)
+        serializer = PostSerializer(product)
+        return Response(serializer.data)
+
+
+class CommentEditDelete(APIView):
+    def get_object(self, pk):
+        try:
+            product = Comment.objects.get(pk=pk)
+            return product
+        except Comment.DoesNotExist:
+            raise Http404
+
+    def get(self, request, product_id):
+        product = self.get_object(pk=product_id)
+        serializer = CommentSerializer(product)
+        return Response(serializer.data)
