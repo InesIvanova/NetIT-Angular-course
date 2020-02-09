@@ -68,12 +68,15 @@ class UserEditDelete(APIView):
         serializer = UserSerializer(product)
         return Response(serializer.data)
 
+    def delete(self):
+        pass
+
 
 class PostEditDelete(APIView):
     def get_object(self, pk):
         try:
-            product = Post.objects.get(pk=pk)
-            return product
+            post = Post.objects.get(pk=pk)
+            return post
         except Post.DoesNotExist:
             raise Http404
 
@@ -81,6 +84,20 @@ class PostEditDelete(APIView):
         product = self.get_object(pk=product_id)
         serializer = PostSerializer(product)
         return Response(serializer.data)
+
+    def delete(self, request, product_id):
+        post = self.get_object(pk=product_id)
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def put(self, request, product_id):
+        post = self.get_object(pk=product_id)
+        serializer = PostSerializer(post, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CommentEditDelete(APIView):
